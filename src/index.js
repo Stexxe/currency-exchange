@@ -1,47 +1,30 @@
-const convert = (valueFrom, valueTo, moneyFrom) => {
-  return valueFrom / valueTo * moneyFrom;
-};
+import {fetchCurrencies} from './currencies';
+import {exchange} from './exchange';
+import {fillSelect, selectedCurrency} from './dom';
 
-const exchange = (currencies, currencyFrom, currencyTo, moneyFrom) => {
-  const findCurrency = currency => currencies.find(data => data.code === currency);
+const recalcFn = (currencyFrom, currencyTo, moneyFrom, moneyTo, currencies) => {
+  return () => {
+    const fromValue = Number.parseFloat(moneyFrom.value);
+    const toValue = Number.parseFloat(moneyTo.value);
 
-  return convert(
-    findCurrency(currencyFrom).value,
-    findCurrency(currencyTo).value,
-    moneyFrom
-  )
-};
+    if (!isNaN(toValue)) {
+      moneyFrom.value = exchange(
+        currencies,
+        selectedCurrency(currencyTo),
+        selectedCurrency(currencyFrom),
+        toValue
+      ).toFixed(2);
+    }
 
-const fetchCurrencies = (url) => {
-  return fetch(url).then(response => {
-    return response.json();
-  }).then(json => {
-    return Object.keys(json.Valute).map(code => ({
-      code,
-      name: json.Valute[code].Name,
-      value: json.Valute[code].Value,
-    }))
-  }).then(currencies => {
-    return currencies.concat({
-      code: 'RUR',
-      name: 'Российский рубль',
-      value: 1,
-    })
-  })
-};
-
-const fillSelect = (element, currencies) => {
-  currencies.forEach(currency => {
-    const option = document.createElement('option');
-    option.value = currency.code;
-    option.innerText = currency.name;
-
-    element.appendChild(option);
-  })
-};
-
-const selectedCurrency = element => {
-  return element.options[element.selectedIndex].value;
+    if (!isNaN(fromValue)) {
+      moneyFrom.value = exchange(
+        currencies,
+        selectedCurrency(currencyFrom),
+        selectedCurrency(currencyTo),
+        fromValue
+      ).toFixed(2);
+    }
+  };
 };
 
 if ('serviceWorker' in navigator) {
@@ -59,13 +42,39 @@ window.addEventListener('load', () => {
     const currencyFrom = document.getElementById('currency-from');
     const currencyTo = document.getElementById('currency-to');
     const moneyFrom = document.getElementById('money-from');
-    const moneyTo= document.getElementById('money-to');
+    const moneyTo = document.getElementById('money-to');
+
+    fillSelect(currencyFrom, currencies);
+    fillSelect(currencyTo, currencies);
+
+    const recalc = recalcFn(currencyFrom, currencyTo, moneyFrom, moneyTo, currencies);
+
+    currencyFrom.addEventListener('change', () => {
+      moneyTo.dispatchEvent(new Event('input'));
+    });
+
+
+    currencyTo.addEventListener('change', () => {
+      moneyTo.dispatchEvent(new Event('input'));
+    });
 
     moneyFrom.addEventListener('input', e => {
       const money = Number.parseFloat(e.target.value);
 
       if (!isNaN(money)) {
         moneyTo.value = exchange(
+          currencies,
+          selectedCurrency(currencyTo),
+          selectedCurrency(currencyFrom),
+          money
+        ).toFixed(2);
+      }
+    });
+    moneyTo.addEventListener('input', e => {
+      const money = Number.parseFloat(e.target.value);
+
+      if (!isNaN(money)) {
+        moneyFrom.value = exchange(
           currencies,
           selectedCurrency(currencyFrom),
           selectedCurrency(currencyTo),
@@ -74,8 +83,46 @@ window.addEventListener('load', () => {
       }
     });
 
-    fillSelect(currencyFrom, currencies);
-    fillSelect(currencyTo, currencies);
+
+    // moneyFrom.addEventListener('input', e => {
+    //   const money = Number.parseFloat(e.target.value);
+    //
+    //   if (!isNaN(money)) {
+    //     moneyTo.value = exchange(
+    //       currencies,
+    //       selectedCurrency(currencyFrom),
+    //       selectedCurrency(currencyTo),
+    //       money
+    //     ).toFixed(2);
+    //   }
+    // });
+    //
+    // moneyTo.addEventListener('input', e => {
+    //   const money = Number.parseFloat(e.target.value);
+    //
+    //   if (!isNaN(money)) {
+    //     moneyFrom.value = exchange(
+    //       currencies,
+    //       selectedCurrency(currencyTo),
+    //       selectedCurrency(currencyFrom),
+    //       money
+    //     ).toFixed(2);
+    //   }
+    // });
+    //
+    // currencyFrom.addEventListener('change', e => {
+    //   const money = Number.parseFloat(moneyFrom.value);
+    //
+    //   if (!isNaN(money)) {
+    //     moneyTo.value = exchange(
+    //       currencies,
+    //       selectedCurrency(currencyFrom),
+    //       selectedCurrency(currencyTo),
+    //       money
+    //     ).toFixed(2);
+    //   }
+    // });
+
 
   });
 });
