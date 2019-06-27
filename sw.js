@@ -5,6 +5,7 @@ self.addEventListener('install', e => {
         '/index.html',
         '/dist/',
         '/dist/bundle.js',
+        '/node_modules/bootstrap/dist/css/bootstrap.min.css',
       ])
     })
   )
