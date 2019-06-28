@@ -9,7 +9,7 @@ export const fetchCurrencies = (url) => {
     }))
   }).then(currencies => {
     return currencies.concat({
-      code: 'RUR',
+      code: 'RUB',
       name: 'Российский рубль',
       value: 1,
     })

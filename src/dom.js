@@ -8,12 +8,10 @@ const createOption = ({code, name}) => {
   return option;
 };
 
-export const fillSelectFn = currencies => {
-  return element => {
-    currencies.forEach(currency => {
-      element.appendChild(createOption(currency));
-    });
-  }
+export const fillSelect = (currencies, element) => {
+  currencies.forEach(currency => {
+    element.appendChild(createOption(currency));
+  });
 };
 
 const selectedOption = select => {
@@ -24,14 +22,14 @@ export const selectedCurrencyFn = currencies => {
   return element => findCurrencyByCode(currencies, selectedOption(element).value);
 };
 
-export const updateMoneyFn = (selectedCurrency, currencyFrom, currencyTo, moneyFrom, moneyTo) => {
+export const updateMoneyFn = (getSelectedCurrency, currencyFrom, currencyTo, moneyFrom, moneyTo) => {
   return () => {
     const money = moneyFrom.value;
 
     if (!isNaN(money)) {
       moneyTo.value = exchange(
-          selectedCurrency(currencyFrom),
-          selectedCurrency(currencyTo),
+          getSelectedCurrency(currencyFrom),
+          getSelectedCurrency(currencyTo),
           money
       ).toFixed(2);
     }
