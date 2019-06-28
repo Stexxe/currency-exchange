@@ -17,3 +17,7 @@ export const fetchCurrencies = (url) => {
     return currencies.sort((a, b) => a.name.localeCompare(b.name));
   })
 };
+
+export const findCurrencyByCode = (currencies, code) => {
+  return currencies.find((currency) => currency.code === code);
+};
