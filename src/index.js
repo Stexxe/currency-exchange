@@ -1,5 +1,5 @@
 import {fetchCurrencies} from './currencies';
-import {fillSelect, selectedCurrencyFn, updateMoneyFn} from './dom';
+import {fillSelect, getSelectedCurrencyFn, updateMoneyFn} from './dom';
 import * as db from './db';
 
 if ('serviceWorker' in navigator) {
@@ -21,7 +21,7 @@ const react = currencies => {
     fillSelect(currencies, currencySource);
     fillSelect(currencies, currencyTarget);
 
-    const getSelectedCurrency = selectedCurrencyFn(currencies);
+    const getSelectedCurrency = getSelectedCurrencyFn(currencies);
     const updateMoney = updateMoneyFn(getSelectedCurrency, currencySource, currencyTarget, moneySource, moneyTarget);
 
     moneySource.addEventListener('input', updateMoney);

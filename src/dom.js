@@ -14,12 +14,12 @@ export const fillSelect = (currencies, element) => {
   });
 };
 
-const selectedOption = select => {
+const getSelectedOption = select => {
   return select.options[select.selectedIndex];
 };
 
-export const selectedCurrencyFn = currencies => {
-  return element => findCurrencyByCode(currencies, selectedOption(element).value);
+export const getSelectedCurrencyFn = currencies => {
+  return element => findCurrencyByCode(currencies, getSelectedOption(element).value);
 };
 
 export const updateMoneyFn = (getSelectedCurrency, currencyFrom, currencyTo, moneyFrom, moneyTo) => {
