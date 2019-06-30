@@ -10,30 +10,30 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const react = currencies => {
-    const currencySource = document.getElementById('currency-from');
-    const currencyTarget = document.getElementById('currency-to');
-    const moneySource = document.getElementById('money-from');
-    const moneyTarget = document.getElementById('money-to');
+const init = currencies => {
+  const currencySource = document.getElementById('currency-from');
+  const currencyTarget = document.getElementById('currency-to');
+  const moneySource = document.getElementById('money-from');
+  const moneyTarget = document.getElementById('money-to');
 
-    fillSelect(currencies, currencySource);
-    fillSelect(currencies, currencyTarget);
+  fillSelect(currencies, currencySource);
+  fillSelect(currencies, currencyTarget);
 
-    const getSelectedCurrency = getSelectedCurrencyFn(currencies);
-    const updateMoney = updateMoneyFn(getSelectedCurrency, currencySource, currencyTarget, moneySource, moneyTarget);
+  const getSelectedCurrency = getSelectedCurrencyFn(currencies);
+  const updateMoney = updateMoneyFn(getSelectedCurrency, currencySource, currencyTarget, moneySource, moneyTarget);
 
-    moneySource.addEventListener('input', updateMoney);
-    currencySource.addEventListener('change', updateMoney);
-    currencyTarget.addEventListener('change', updateMoney);
+  moneySource.addEventListener('input', updateMoney);
+  currencySource.addEventListener('change', updateMoney);
+  currencyTarget.addEventListener('change', updateMoney);
 };
 
 window.addEventListener('load', () => {
   fetch('https://www.cbr-xml-daily.ru/daily_json.js')
     .then(response => response.json())
     .then(getCurrenciesFromJSON)
-		.then(db.updateCurrencies)
-		.then(react)
-		.catch(() => {
-			db.fetchCurrencies().then(react);
-		});
+    .then(db.updateCurrencies)
+    .then(init)
+    .catch(() => {
+      db.fetchCurrencies().then(init);
+    });
 });
