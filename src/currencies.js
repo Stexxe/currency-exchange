@@ -12,5 +12,5 @@ export const getCurrenciesFromJSON = (json) => {
 };
 
 export const findCurrencyByCode = (currencies, code) => {
-  return currencies.find((currency) => currency.code === code);
+  return currencies.find(currency => currency.code === code);
 };
