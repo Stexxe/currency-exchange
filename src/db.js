@@ -20,8 +20,20 @@ const getStore = () => {
 export const fetchCurrencies = () => {
 	return getStore().then(store => {
 		return new Promise((resolve, reject) => {
-			const request = store.getAll();
-			request.onsuccess = () => resolve(request.result);
+			const request = store.index('name').openCursor(null, 'next');
+			let result = [];
+
+			request.onsuccess = e => {
+        const cursor = e.target.result;
+
+        if (cursor && cursor.value) {
+          result.push(cursor.value);
+          cursor.continue();
+        } else {
+        	resolve(result);
+				}
+			};
+
 			request.onerror = reject;
 		});
 	});
@@ -40,6 +52,8 @@ export const updateCurrencies = currencies => {
 		  openRequest.onupgradeneeded = e => {
 		    const db = e.target.result;
 		    const store = db.createObjectStore(STORE, {keyPath: 'code'});
+        store.createIndex('name', 'name', {unique: false});
+
 		    store.transaction.onerror = reject;
 
 		    store.transaction.oncomplete = () => {
