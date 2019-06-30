@@ -28,7 +28,6 @@ export const fetchCurrencies = () => {
 };
 
 const saveCurrencies = (currencies, store) => {
-	console.log('updated');
 	store.clear();
 	currencies.forEach(currency => store.add(currency));
 	return currencies;

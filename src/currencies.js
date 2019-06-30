@@ -1,4 +1,4 @@
-export const ratesFromJSON = (json) => {
+export const getCurrenciesFromJSON = (json) => {
   return Object.values(json.Valute)
     .map(({CharCode, Name, Nominal, Value}) => ({
       code: CharCode,
@@ -9,12 +9,6 @@ export const ratesFromJSON = (json) => {
       name: 'Российский рубль',
       value: 1,
     }).sort((a, b) => a.name.localeCompare(b.name));
-};
-
-export const fetchCurrencies = (url) => {
-  return fetch(url).then(response => {
-    return response.json();
-  }).then(ratesFromJSON)
 };
 
 export const findCurrencyByCode = (currencies, code) => {

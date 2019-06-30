@@ -1,11 +1,11 @@
-import {ratesFromJSON} from '../src/currencies';
+import {findCurrencyByCode, getCurrenciesFromJSON} from '../src/currencies';
 
 const expect = require('chai').expect;
 
 describe('Currencies rates', () => {
   describe('Transforming from CBR json', () => {
     it('Should add RUB currency rate', () => {
-      expect(ratesFromJSON({
+      expect(getCurrenciesFromJSON({
         Valute: {
           USD: {
             CharCode: "USD",
@@ -29,7 +29,7 @@ describe('Currencies rates', () => {
     });
 
     it('Should sort rates by currency name', () => {
-      expect(ratesFromJSON({
+      expect(getCurrenciesFromJSON({
         Valute: {
           JPY: {
             CharCode: "JPY",
@@ -52,8 +52,8 @@ describe('Currencies rates', () => {
       ]);
     });
 
-    it('Should should recalculate value based on nominal', () => {
-      expect(ratesFromJSON({
+    it('Should recalculate value based on nominal', () => {
+      expect(getCurrenciesFromJSON({
         Valute: {
           JPY: {
             CharCode: 'SEK',
@@ -68,7 +68,14 @@ describe('Currencies rates', () => {
         value: 7,
       });
     });
+  });
 
-
+  it('Should find currency by code', () => {
+    expect(findCurrencyByCode([
+        {code: 'SOME', name: 'Unknown'},
+        {code: 'CODE', name: 'Currency'},
+      ],
+      'CODE',
+    )).to.eql({code: 'CODE', name: 'Currency'});
   });
 });

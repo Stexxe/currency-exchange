@@ -24,7 +24,7 @@ export const getSelectedCurrencyFn = currencies => {
 
 export const updateMoneyFn = (getSelectedCurrency, currencyFrom, currencyTo, moneyFrom, moneyTo) => {
   return () => {
-    const money = moneyFrom.value;
+    const money = Number.parseFloat(moneyFrom.value);
 
     if (!isNaN(money)) {
       moneyTo.value = exchange(

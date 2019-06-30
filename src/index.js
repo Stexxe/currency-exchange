@@ -1,4 +1,4 @@
-import {fetchCurrencies} from './currencies';
+import {getCurrenciesFromJSON} from './currencies';
 import {fillSelect, getSelectedCurrencyFn, updateMoneyFn} from './dom';
 import * as db from './db';
 
@@ -30,10 +30,10 @@ const react = currencies => {
 };
 
 window.addEventListener('load', () => {
-	fetchCurrencies('https://www.cbr-xml-daily.ru/daily_json.js')
-		.then(currencies => {
-			return db.updateCurrencies(currencies);
-		})
+  fetch('https://www.cbr-xml-daily.ru/daily_json.js')
+    .then(response => response.json())
+    .then(getCurrenciesFromJSON)
+		.then(db.updateCurrencies)
 		.then(react)
 		.catch(() => {
 			db.fetchCurrencies().then(react);
