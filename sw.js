@@ -4,6 +4,10 @@ const CACHE_URLS = [
   '/dist/',
   '/dist/bundle.js',
   '/node_modules/bootstrap/dist/css/bootstrap.min.css',
+  '/images',
+  '/images/icons-192.png',
+  '/images/icons-512.png',
+  '/manifest.json',
 ];
 
 self.addEventListener('install', e => {

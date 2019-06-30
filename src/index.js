@@ -4,9 +4,7 @@ import * as db from './db';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then((e) => {
-      console.log('SW registered: ', e);
-    }).catch((error) => {
+    navigator.serviceWorker.register('sw.js').catch(error => {
       console.log('SW registration failed: ', error);
     })
   });
