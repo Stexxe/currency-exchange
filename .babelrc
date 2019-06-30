@@ -1,12 +1,5 @@
 {
-  "presets": [
-    [
-      "env",
-      {
-        "modules": false
-      }
-    ]
-  ],
+  "presets": ["@babel/preset-env"],
   "env": {
     "test": {
       "presets": [
